@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Gacha bixyybix</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #ffcc00;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+    }
+    #result {
+      font-size: 1.8em;
+      margin: 20px 0;
+      min-height: 60px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      transition: all 0.3s;
+    }
+    .common { color: #aaaaaa; }
+    .rare { color: #44bbff; }
+    .epic { color: #ff9900; font-weight: bold; text-shadow: 0 0 10px gold; }
+
+    button {
+      background: #ffcc00;
+      color: #1a1a2e;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.2em;
+      border-radius: 50px;
+      cursor: pointer;
+      margin: 10px;
+      transition: transform 0.2s, background 0.3s;
+    }
+    button:hover {
+      background: #ffd740;
+      transform: scale(1.05);
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #history {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+    .history-item {
+      padding: 4px 0;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ Gacha Simulator ✨</h1>
+    <p>Klik tombol di bawah untuk menarik karakter acak!</p>
+    
+    <div id="result">Hasil gacha akan muncul di sini...</div>
+    
+    <button onclick="gacha()">Tarik Gacha! (1x)</button>
+    
+    <div id="history">
+      <strong>Riwayat:</strong>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const characters = [
+      { name: "Kucing Lucu", rarity: "common" },
+      { name: "Robot Mini", rarity: "common" },
+      { name: "Bola Api", rarity: "common" },
+      { name: "Ninja Bayangan", rarity: "rare" },
+      { name: "Penyihir Ajaib", rarity: "rare" },
+      { name: "Naga Emas", rarity: "epic" },
+      { name: "Dewa Langit", rarity: "epic" }
+    ];
+
+    const historyList = document.getElementById("history-list");
+
+    function gacha() {
+      // Animasi loading
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = "Menarik...";
+      resultDiv.className = "";
+
+      setTimeout(() => {
+        const rand = Math.random();
+        let selected;
+
+        if (rand < 0.6) {
+          // Common (60%)
+          selected = characters.filter(c => c.rarity === "common")[Math.floor(Math.random() * 3)];
+        } else if (rand < 0.9) {
+          // Rare (30%)
+          selected = characters.filter(c => c.rarity === "rare")[Math.floor(Math.random() * 2)];
+        } else {
+          // Epic (10%)
+          selected = characters.filter(c => c.rarity === "epic")[Math.floor(Math.random() * 2)];
+        }
+
+        // Tampilkan hasil
+        resultDiv.textContent = `🎉 ${selected.name}!`;
+        resultDiv.className = selected.rarity;
+
+        // Tambah ke riwayat
+        const historyItem = document.createElement("div");
+        historyItem.className = "history-item";
+        historyItem.innerHTML = `<span class="${selected.rarity}">${selected.name}</span>`;
+        historyList.prepend(historyItem); // Tambah di atas
+
+        // Batasi riwayat (opsional)
+        if (historyList.children.length > 10) {
+          historyList.removeChild(historyList.lastChild);
+        }
+      }, 800);
+    }
+  </script>
+</body>
+</html>
